@@ -1,0 +1,64 @@
+repository:
+  name: ynov-b3-formaflow-interop
+  version: 0.1.0
+  status: specification
+  academic_year: 2026-2027
+  module: Echange de donnees et interoperabilite
+  duration_hours: 14
+  ffp_hours: 6
+  tdp_hours: 8
+
+reference:
+  source_repository: ynov-b3-formaflow-hexagonal
+  source_tag: reference-final
+  local_path: inputs/architecture-reference
+  mode: copied_snapshot
+
+runtime:
+  language: Python
+  version: "3.12"
+  api_framework: FastAPI
+  test_framework: pytest
+  schema_tools:
+    - jsonschema
+    - protobuf
+    - fastavro
+  messaging_client: pika
+  broker: RabbitMQ
+  comparison_only: Redis Pub/Sub
+  external_services_required: false
+  data_policy: synthetic_only
+
+commands:
+  - setup
+  - start
+  - stop
+  - reset-data
+  - contracts
+  - benchmark
+  - test
+  - smoke
+  - quality
+
+tags:
+  formative:
+    - course-start
+    - checkpoint-contract
+    - checkpoint-serialization
+    - checkpoint-async
+    - checkpoint-versioning
+  canonical:
+    - reference-final
+
+assessment:
+  assessed: false
+  graded_artifacts: 0
+  individual_qcm:
+    duration_minutes: 30
+    graded: false
+    purpose: formative_validation
+
+handoff:
+  target_repository: ynov-b3-formaflow-agility
+  local_path: handoff/agility-reference
+  consumer_path: inputs/interop-reference
