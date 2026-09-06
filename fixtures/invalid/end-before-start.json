@@ -1,0 +1,19 @@
+{
+  "eventId": "10000000-0000-4000-8000-000000000003",
+  "eventType": "TrainingSessionCreated",
+  "version": 1,
+  "occurredAt": "2027-01-10T09:00:00Z",
+  "correlationId": "20000000-0000-4000-8000-000000000003",
+  "causationId": null,
+  "producer": "training-management",
+  "payload": {
+    "trainingSessionId": "SES-2027-0003",
+    "trainingId": "TRN-0002",
+    "startsAt": "2027-03-02T17:00:00Z",
+    "endsAt": "2027-03-02T09:00:00Z",
+    "capacity": 8,
+    "referencePrice": {"amountMinor": 50000, "currency": "EUR"},
+    "status": "SCHEDULED"
+  }
+}
+

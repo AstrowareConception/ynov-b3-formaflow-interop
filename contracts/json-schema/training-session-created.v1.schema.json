@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrobridge.example.test/contracts/training-session-created.v1.schema.json",
+  "title": "TrainingSessionCreated.v1",
+  "description": "Integration event owned by AstroBridge contract governance.",
+  "type": "object",
+  "required": ["eventId", "eventType", "version", "occurredAt", "correlationId", "causationId", "producer", "payload"],
+  "properties": {
+    "eventId": {"type": "string", "format": "uuid"},
+    "eventType": {"const": "TrainingSessionCreated"},
+    "version": {"const": 1},
+    "occurredAt": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "correlationId": {"type": "string", "format": "uuid"},
+    "causationId": {"type": ["string", "null"], "format": "uuid"},
+    "producer": {"const": "training-management"},
+    "payload": {
+      "type": "object",
+      "required": ["trainingSessionId", "trainingId", "startsAt", "endsAt", "capacity", "referencePrice", "status"],
+      "properties": {
+        "trainingSessionId": {"type": "string", "pattern": "^SES-[0-9]{4}-[0-9]{4}$"},
+        "trainingId": {"type": "string", "pattern": "^TRN-[0-9]{4}$"},
+        "startsAt": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "endsAt": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "capacity": {"type": "integer", "minimum": 1},
+        "referencePrice": {
+          "type": "object",
+          "required": ["amountMinor", "currency"],
+          "properties": {
+            "amountMinor": {"type": "integer", "minimum": 0},
+            "currency": {"type": "string", "pattern": "^[A-Z]{3}$", "enum": ["EUR"]}
+          },
+          "additionalProperties": false
+        },
+        "status": {"const": "SCHEDULED"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
+

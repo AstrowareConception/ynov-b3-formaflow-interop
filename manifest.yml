@@ -2,7 +2,7 @@ repository:
   name: ynov-b3-formaflow-interop
   version: 1.0.0
   status: teaching
-  stage: course-start
+  stage: checkpoint-contract
   academic_year: 2026-2027
   module: Echange de donnees et interoperabilite
   duration_hours: 14

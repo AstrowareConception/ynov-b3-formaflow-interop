@@ -1,9 +1,13 @@
-# Contrats
+# Contrat canonique V1
 
-Ce dossier accueillera trois représentations de `TrainingSessionCreated` :
+`TrainingSessionCreated.v1` est un événement d'intégration dérivé de la création métier d'une session, jamais une sérialisation d'agrégat ou d'ORM.
 
-- `json-schema/` : sources JSON Schema 2020-12, exemples valides et invalides ;
-- `protobuf/` : fichiers `.proto` et configuration de génération ;
-- `avro/` : fichiers `.avsc` et scénarios writer/reader.
+- Propriétaire : gouvernance de contrat AstroBridge avec `training-management` producteur.
+- Source métier : création d'une session planifiée FormaFlow.
+- Consommateurs : préparation administrative et notification synthétique.
+- Garanties : enveloppe stable, identifiants opaques, UTC, capacité positive, prix en unité mineure, EUR, statut initial.
+- Non-garanties : ordre global, livraison exactement une fois, contenu personnel, structure interne ou envoi d'e-mail.
+- Évolution : ajout compatible seulement après analyse des lecteurs ; rupture de sens, unité, type ou champ requis implique une nouvelle version et une migration testée.
 
-Le sens métier commun et les règles de mapping sont documentés hors du code généré. Les versions v1/v2 doivent coexister assez longtemps pour exécuter les tests de compatibilité. Aucun fichier généré ne devient la source de vérité.
+Le JSON Schema contrôle la structure. `astrobridge.contracts.validation` ajoute l'invariant inter-champs `endsAt > startsAt` et retourne des chemins d'erreur lisibles.
+
