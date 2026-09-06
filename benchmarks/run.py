@@ -34,9 +34,7 @@ Encoder = Callable[[dict[str, Any]], bytes]
 Decoder = Callable[[bytes], dict[str, Any]]
 
 
-def measure(
-    events: list[dict[str, Any]], encoder: Encoder, decoder: Decoder
-) -> dict[str, Any]:
+def measure(events: list[dict[str, Any]], encoder: Encoder, decoder: Decoder) -> dict[str, Any]:
     for _ in range(WARMUP):
         blobs = [encoder(event) for event in events]
         [decoder(blob) for blob in blobs]

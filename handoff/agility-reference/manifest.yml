@@ -1,0 +1,12 @@
+handoff:
+  name: formaflow-interop-agility-reference
+  version: 1.0.0
+  source_repository: ynov-b3-formaflow-interop
+  source_version: 1.0.0
+  source_tag: reference-final
+  target_repository: ynov-b3-formaflow-agility
+  autonomous: true
+  assessment: false
+  data_policy: synthetic_only
+validation: python scripts/validate_handoff.py
+

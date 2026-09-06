@@ -33,4 +33,3 @@ def test_three_formats_are_semantically_equivalent() -> None:
         decode_avro(encode_avro(EVENT)),
     ]
     assert representations[0] == representations[1] == representations[2]
-

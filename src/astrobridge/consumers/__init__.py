@@ -1,2 +1,1 @@
 """Independent synthetic consumers."""
-

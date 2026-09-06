@@ -1,0 +1,8 @@
+flowchart LR
+    Q[main queue] --> C[consumer]
+    C -->|succès ou doublon| ACK[ack]
+    C -->|échec retry inférieur à 3| R[retry exchange + TTL]
+    R --> Q
+    C -->|échec après borne| D[dead-letter exchange]
+    D --> DLQ[consumer DLQ]
+

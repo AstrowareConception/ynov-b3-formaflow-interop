@@ -34,4 +34,3 @@ class EvidenceStore:
         path = self.root / f"evidence-{consumer}.jsonl"
         with path.open("a", encoding="utf-8", newline="\n") as output:
             output.write(json.dumps(trace, sort_keys=True) + "\n")
-

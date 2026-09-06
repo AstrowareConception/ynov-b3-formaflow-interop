@@ -1,0 +1,6 @@
+flowchart LR
+    Producer[training-management] --> Contract[Contrat AstroBridge]
+    Contract --> Broker[(RabbitMQ)]
+    Broker --> A[Administration]
+    Broker --> N[Notification locale]
+

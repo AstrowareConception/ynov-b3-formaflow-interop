@@ -25,4 +25,3 @@ def test_v1_upcast_uses_explicit_defaults() -> None:
     assert current["payload"]["deliveryMode"] == "ONSITE"
     assert current["payload"]["location"] == {"label": "TO_BE_CONFIRMED"}
     assert validate_event(current, version=2) == []
-

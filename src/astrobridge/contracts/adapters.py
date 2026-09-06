@@ -22,4 +22,3 @@ def downcast_v2_to_v1(event: dict[str, Any]) -> dict[str, Any]:
     adapted["payload"].pop("deliveryMode", None)
     adapted["payload"].pop("location", None)
     return adapted
-

@@ -1,32 +1,24 @@
 # Compatibilité et versionnement
 
-## Vocabulaire obligatoire
+## Vocabulaire
 
-Toute conclusion de compatibilité nomme explicitement :
+Toute conclusion nomme la version produite ou le schéma writer, la version consommée ou le schéma reader, le sens testé, le résultat et la preuve. Les termes backward, forward et full compatibility ne sont pas employés sans ce contexte.
 
-- la version produite ou le schéma d'écriture ;
-- la version consommée ou le schéma de lecture ;
-- le sens testé ;
-- le résultat et sa preuve.
+## Ressources livrées
 
-Les termes backward, forward et full compatibility ne sont jamais employés sans ce contexte.
+- `contracts/compatibility/matrix.yml` contient les couples writer/reader V1 et V2 ;
+- `contracts/compatibility/format-evolution.md` décrit ajouts, défauts, renommages, suppressions, changements de type et champs Protobuf réservés ;
+- `docs/versioning.md` définit la stratégie d'API, la dépréciation, la migration et le rollback ;
+- `tests/compatibility/` vérifie les cas compatibles et volontairement incompatibles.
 
-## Matrice minimale
-
-`compatibility/serialization-matrix.md` confrontera readers et writers v1/v2 pour JSON Schema, Protobuf et Avro. `compatibility/api-versioning.md` confrontera client v1, client v2, API v1, API v2 et adaptateur.
-
-Chaque cellule contient : compatible, conditionnel ou cassant ; test associé ; éventuelle perte d'information ; limite sémantique.
+Chaque résultat précise la perte d'information éventuelle et la limite sémantique.
 
 ## API HTTP
 
-Le dossier v1-v2 permet de comparer :
+La stratégie canonique utilise des chemins `/api/v1` et `/api/v2`. Le versionnement par en-tête reste comparé dans `docs/versioning.md`, sans seconde implémentation complète. Version d'API, version de message et version d'application restent indépendantes.
 
-- version dans l'URL ;
-- version dans un en-tête ;
-- négociation par media type.
-
-La décision prend en compte lisibilité, cache, routage, documentation, observabilité et coût de migration. Version d'API, version de message et version d'application restent indépendantes.
+La route V1 expose les en-têtes `Deprecation`, `Sunset` et `Link`. La route V2 downcaste explicitement vers V1 pour préserver l'ancien consommateur.
 
 ## Dépréciation
 
-La politique attendue précise coexistence, adaptateur, avertissement, métriques d'usage, échéance, critères d'arrêt et rollback. Les en-têtes `Deprecation` et `Sunset` peuvent être employés lorsqu'ils sont applicables, mais ne remplacent pas une communication et une stratégie de repli.
+La politique décrit coexistence, adaptateur, avertissement, observation d'usage, échéance, critères d'arrêt et rollback. Les en-têtes HTTP complètent cette communication mais ne la remplacent pas.

@@ -20,8 +20,11 @@ def test_protobuf_old_reader_ignores_and_preserves_unknown_fields() -> None:
         (ROOT / "contracts/examples/training-session-created.v2.valid.json").read_text()
     )
     current = TrainingSessionCreatedV2(
-        event_id=event["eventId"], event_type=event["eventType"], version=2,
-        occurred_at=event["occurredAt"], correlation_id=event["correlationId"],
+        event_id=event["eventId"],
+        event_type=event["eventType"],
+        version=2,
+        occurred_at=event["occurredAt"],
+        correlation_id=event["correlationId"],
         producer=event["producer"],
     )
     payload = event["payload"]

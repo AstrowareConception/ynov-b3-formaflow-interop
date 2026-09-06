@@ -1,7 +1,7 @@
-# Sortie — Référence pour l'agilité
+# Handoff canonique vers Agilité
 
-Ce dossier sera construit et publié par le formateur au tag `reference-final`. Il transformera la migration AstroBridge v1-v2 en dossier projet autonome pour `ynov-b3-formaflow-agility`.
+Paquet autonome issu de `ynov-b3-formaflow-interop` 1.0.0 au tag `reference-final`. Il traduit l'évolution V1 vers V2 en contexte projet sans transmettre l'application complète ni résoudre le travail agile à la place des étudiants.
 
-Il contiendra demande d'évolution, acteurs, valeur attendue, parcours, dépendances, résumé des contrats, incident, matrice de compatibilité, critères d'acceptation, risques, inconnues, preuves et glossaire.
+Commencer par `change-request-v1-v2.md`, puis relier acteurs, parcours, dépendances, incident et critères d'acceptation. Valider une copie isolée avec `python scripts/validate_handoff.py` depuis ce dossier.
 
-Les productions de binômes ne sont jamais transférées directement. Le paquet final doit être compréhensible sans maîtriser Python, RabbitMQ, Protobuf ou Avro.
+Le paquet contient uniquement des données synthétiques et des preuves formatives non notées. Il ne contient aucune évaluation, banque de contenu, backlog achevé, secret ou dépendance d'exécution externe.

@@ -62,9 +62,7 @@ def accept_v1_event(
 
 
 @app.post("/api/v2/events")
-def accept_v2_event(
-    event: dict[str, Any], publish: bool = Query(default=False)
-) -> dict[str, Any]:
+def accept_v2_event(event: dict[str, Any], publish: bool = Query(default=False)) -> dict[str, Any]:
     assert_valid_event(event, version=2)
     legacy = downcast_v2_to_v1(event)
     assert_valid_event(legacy, version=1)
@@ -80,19 +78,6 @@ def read_evidence(consumer: str) -> dict[str, object]:
     path = Settings().data_dir / f"evidence-{consumer}.jsonl"
     lines = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
     return {"consumer": consumer, "synthetic": True, "traces": [json.loads(line) for line in lines]}
-
-
-@app.exception_handler(ValueError)
-async def contract_error_handler(request: Request, error: ValueError) -> JSONResponse:
-    correlation_id = request.headers.get("X-Correlation-ID", "synthetic-local-request")
-    return JSONResponse(
-        status_code=422,
-        content={
-            "error": "contract_validation_failed",
-            "message": str(error),
-            "correlationId": correlation_id,
-        },
-    )
 
 
 @app.post("/webhooks/training-session")

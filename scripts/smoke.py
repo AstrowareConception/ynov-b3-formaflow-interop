@@ -31,6 +31,10 @@ def main() -> int:
         evidence = settings.data_dir / f"evidence-{consumer}.jsonl"
         if not evidence.exists():
             raise RuntimeError(f"missing local evidence: {evidence}")
+        proof = httpx.get(f"http://127.0.0.1:8000/evidence/{consumer}", timeout=5)
+        proof.raise_for_status()
+        if not proof.json()["traces"]:
+            raise RuntimeError(f"empty evidence endpoint for {consumer}")
     print("Smoke passed: API, contract, confirmed publish, two consumers, duplicate and evidence")
     return 0
 

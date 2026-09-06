@@ -22,15 +22,62 @@ def setup() -> int:
     if not venv.exists():
         run(sys.executable, "-m", "venv", str(venv))
     python = venv / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-    return run(str(python), "-m", "pip", "install", "--require-hashes", "-r", "requirements.lock")
+    run(str(python), "-m", "pip", "install", "--require-hashes", "-r", "requirements.lock")
+    return run(str(python), "-m", "pip", "install", "--no-deps", "-e", ".")
 
 
 def compose(*args: str) -> int:
     return run("docker", "compose", "-p", PROJECT, *args)
 
 
-def reset_data() -> int:
+def verify_no_compose_resources() -> None:
+    docker = shutil.which("docker")
+    if docker is None:
+        raise RuntimeError("docker executable not found")
+    commands = [
+        [
+            docker,
+            "ps",
+            "-a",
+            "--filter",
+            f"label=com.docker.compose.project={PROJECT}",
+            "--quiet",
+        ],
+        [
+            docker,
+            "network",
+            "ls",
+            "--filter",
+            f"label=com.docker.compose.project={PROJECT}",
+            "--quiet",
+        ],
+        [
+            docker,
+            "volume",
+            "ls",
+            "--filter",
+            f"label=com.docker.compose.project={PROJECT}",
+            "--quiet",
+        ],
+    ]
+    residual = []
+    for command in commands:
+        result = subprocess.run(  # noqa: S603 - resolved executable and fixed project label
+            command, cwd=ROOT, check=True, capture_output=True, text=True
+        )
+        residual.extend(line for line in result.stdout.splitlines() if line)
+    if residual:
+        raise RuntimeError(f"residual Compose resources: {residual}")
+
+
+def stop() -> int:
     compose("down", "--volumes", "--remove-orphans")
+    verify_no_compose_resources()
+    return 0
+
+
+def reset_data() -> int:
+    stop()
     target = (ROOT / ".astrobridge").resolve()
     if target.parent != ROOT.resolve():
         raise RuntimeError(f"refusing to remove unexpected path: {target}")
@@ -44,7 +91,7 @@ def smoke() -> int:
     try:
         return compose("exec", "-T", "api", "python", "scripts/smoke.py")
     finally:
-        compose("down", "--volumes", "--remove-orphans")
+        stop()
 
 
 def contracts() -> int:
@@ -57,14 +104,26 @@ def benchmark() -> int:
     return run(sys.executable, "benchmarks/run.py")
 
 
+def quality() -> int:
+    run(sys.executable, "-m", "ruff", "format", "--check", ".")
+    run(sys.executable, "-m", "ruff", "check", ".")
+    run(sys.executable, "-m", "mypy")
+    run(sys.executable, "-m", "pytest", "-m", "not integration and not smoke")
+    run(sys.executable, "scripts/generate_openapi.py", "--check")
+    run(sys.executable, "scripts/generate_contracts.py", "--check")
+    run(sys.executable, "scripts/render_diagrams.py", "--check")
+    run(sys.executable, "handoff/agility-reference/scripts/validate_handoff.py")
+    return run(sys.executable, "scripts/validate_repo.py")
+
+
 def main() -> int:
     task = sys.argv[1] if len(sys.argv) > 1 else "help"
     commands = {
         "setup": setup,
-        "start": lambda: compose("up", "-d", "--build"),
-        "stop": lambda: compose("down", "--volumes", "--remove-orphans"),
+        "start": lambda: compose("up", "-d", "--build", "--wait"),
+        "stop": stop,
         "reset-data": reset_data,
-        "test": lambda: run(sys.executable, "-m", "pytest"),
+        "test": lambda: run(sys.executable, "-m", "pytest", "-m", "not integration and not smoke"),
         "test-unit": lambda: run(sys.executable, "-m", "pytest", "tests/unit"),
         "test-contracts": lambda: run(sys.executable, "-m", "pytest", "tests/contracts"),
         "test-compatibility": lambda: run(sys.executable, "-m", "pytest", "tests/compatibility"),
@@ -75,16 +134,17 @@ def main() -> int:
         "generate": lambda: run(sys.executable, "scripts/generate_contracts.py"),
         "benchmark": benchmark,
         "smoke": smoke,
+        "quality": quality,
         "validate-repo": lambda: run(sys.executable, "scripts/validate_repo.py"),
+        "validate-diagrams": lambda: run(sys.executable, "scripts/render_diagrams.py", "--check"),
+        "validate-handoff": lambda: run(
+            sys.executable, "handoff/agility-reference/scripts/validate_handoff.py"
+        ),
+        "package": lambda: run(sys.executable, "scripts/package_release.py"),
     }
     if task in commands:
         return commands[task]()
-    future = {
-        "quality",
-        "validate-diagrams",
-        "validate-handoff",
-        "package",
-    }
+    future: set[str] = set()
     if task in future:
         print(f"{task}: available at its teaching checkpoint")
         return 0

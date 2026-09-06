@@ -32,11 +32,9 @@ def check_current() -> bool:
         generate(candidate)
         names = [proto.stem + "_pb2.py" for proto in PROTO_DIR.glob("*.proto")]
         return bool(names) and all(
-            (OUTPUT / name).exists()
-            and filecmp.cmp(OUTPUT / name, candidate / name, shallow=False)
+            (OUTPUT / name).exists() and filecmp.cmp(OUTPUT / name, candidate / name, shallow=False)
             for name in names
         )
-
 
 
 def main() -> int:

@@ -1,0 +1,8 @@
+flowchart LR
+    V1[V1 client] --> API1["/api/v1"]
+    V2[V2 client] --> API2["/api/v2"]
+    API2 --> Down[downcast explicite]
+    Down --> C1[contrat V1 broker]
+    API1 --> C1
+    V1 --> Up[upcast avec défauts]
+    Up --> C2[modèle V2]

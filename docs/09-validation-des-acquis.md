@@ -6,18 +6,19 @@ Le syllabus porte la mention « Non évalué ». Aucune production du repository
 
 ## QCM individuel formatif
 
-Durée : 30 minutes. Format indicatif : 20 questions ou mini-situations, sans point négatif.
+La séance 4 réserve 30 minutes à un QCM individuel validé par Ynov, formatif et non noté. Le dépôt public ne contient aucune question, réponse, correction, banque, donnée individuelle ou mécanique de notation.
 
-Couverture indicative :
+Les axes de feedback portent sur :
 
-- JSON Schema et data contracts : 4 points de repère ;
-- choix de format et compatibilité Protobuf/Avro : 4 points ;
-- patterns d'intégration et fiabilité RabbitMQ : 6 points ;
-- versionnement d'API et rétrocompatibilité : 4 points ;
-- traçabilité et choix proportionné : 2 points.
+- la précision des contrats JSON et des invariants ;
+- le choix contextualisé entre JSON, Protobuf et Avro ;
+- la compatibilité des writers et readers ;
+- la fiabilité des échanges RabbitMQ et webhooks ;
+- le versionnement d'API et l'adaptation d'un ancien client ;
+- la traçabilité d'une décision et de ses limites.
 
-Un score sur 20 et une correction argumentée sont restitués à l'étudiant à titre formatif. Le repository public ne contient ni questions définitives, ni réponses, ni corrigé.
+Le retour pédagogique peut être collectif ou individuel. Il explicite les raisonnements solides, les confusions observées et les pistes de révision sans produire de score ni de seuil de réussite.
 
 ## Feedback sur les ateliers
 
-Les productions en binôme sont observées sous l'angle de la précision du contrat, de l'équivalence sémantique, de la reproductibilité, de la fiabilité, de la compatibilité et de l'honnêteté des limites. Ce feedback n'est pas une seconde évaluation.
+Les productions en binôme sont relues sous l'angle de la précision, de l'équivalence sémantique, de la reproductibilité, de la fiabilité, de la compatibilité et de l'honnêteté des limites. Ce feedback reste formatif.

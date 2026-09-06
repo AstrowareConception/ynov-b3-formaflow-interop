@@ -6,4 +6,4 @@ images:
   rabbitmq:
     tag: rabbitmq:4.1.2-management
     digest: sha256:b19379c75c518853b02ab09dfdb84d42b1d40d319bfd315b29ed9e7a32c7968d
-update: "Run python scripts/tasks.py update-image-lock, review the resolved manifests, then run compose config and smoke."
+update: "Follow docs/docker-images.md, review the resolved manifests, then run docker compose config and python scripts/tasks.py smoke."

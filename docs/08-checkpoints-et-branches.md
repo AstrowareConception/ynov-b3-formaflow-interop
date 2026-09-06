@@ -1,21 +1,25 @@
 # Checkpoints et branches
 
-## Règles Git
+## Tags formateur
 
-- le formateur publie `course-start` et `reference-final` ;
-- chaque binôme crée `work/<team-id>` depuis `course-start` ;
-- chaque checkpoint correspond à un état exécutable et documenté ;
-- les commits décrivent une intention pédagogique observable ;
-- aucun secret, environnement virtuel ou résultat non reproductible n'est versionné ;
-- un checkpoint est formatif et n'est pas une note.
+Le bundle de référence distribue les sept tags annotés suivants :
 
-## Contrat des checkpoints
+| Tag | État |
+|---|---|
+| `course-start` | environnement guidé et lacunes pédagogiques contrôlées |
+| `checkpoint-contract` | mapping, JSON Schema, exemples et tests |
+| `checkpoint-serialization` | JSON, Protobuf, Avro, benchmark et matrice |
+| `checkpoint-async` | RabbitMQ, webhook, idempotence, retry et DLQ |
+| `checkpoint-versioning` | V2, compatibilité, API, migration et incident |
+| `reference-final` | référence formateur consolidée |
+| `interop-v1.0.0` | alias de release du même commit final |
 
-| Tag | Contenu minimal | Contrôle |
-|---|---|---|
-| `checkpoint-contract` | JSON Schema, mapping, exemples et tests | `make contracts && make test` |
-| `checkpoint-serialization` | Trois contrats, benchmark et matrice | `make contracts && make benchmark && make test` |
-| `checkpoint-async` | Producer, consumers, DLQ, idempotence et preuves | `make smoke && make test` |
-| `checkpoint-versioning` | Migration v1-v2, compatibilité, ADR et trace CDAN | `make quality` |
+Chaque tag se valide avec la commande indiquée dans son annotation. Un checkpoint conforme à son stade n'est pas présenté comme défectueux.
 
-Si un groupe n'atteint pas un checkpoint, la séance suivante peut repartir d'un état canonique intermédiaire distribué par le formateur. La continuité du cours ne dépend jamais d'une réussite antérieure.
+## Branches étudiant
+
+Les tags formateur sont immuables pour le parcours distribué. Chaque binôme peut créer localement une branche `work/<team-id>` depuis `course-start`. Cette branche de travail n'est ni un tag canonique, ni une branche d'évaluation, ni un mécanisme de rendu noté.
+
+Si un groupe n'atteint pas un checkpoint, la séance suivante peut repartir du tag canonique intermédiaire. La continuité du cours ne dépend pas de la réussite d'une étape précédente.
+
+Les commits décrivent une intention observable et n'incluent aucun secret, environnement virtuel ou résultat local non reproductible.

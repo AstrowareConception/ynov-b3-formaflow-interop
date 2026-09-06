@@ -2,29 +2,30 @@
 
 ## Topologie RabbitMQ
 
-La référence comporte un exchange `topic`, une queue par responsabilité de consumer et des routing keys explicites. Les noms exacts seront fixés dans l'implémentation V0.2, avec une convention commune dans la documentation et les tests.
+- exchange topic : `formaflow.events` ;
+- routing key : `training.session.created.v1` ;
+- file administration : `astrobridge.administration.training-session-created.v1` ;
+- file notification : `astrobridge.notification.training-session-created.v1` ;
+- exchange retry : `astrobridge.retry` ;
+- exchange dead-letter : `astrobridge.dead-letter` ;
+- files retry et DLQ suffixées respectivement par `.retry` et `.dlq`.
 
-Le producteur active les publisher confirms et publie des messages persistants. Les consumers utilisent acknowledgements manuels, prefetch borné, validation à l'entrée et logs structurés.
+Le producteur publie des messages persistants avec publisher confirms et `mandatory=True`. Les consommateurs utilisent un ack manuel et `prefetch_count=1`.
 
-## Sémantique de livraison
+## Retry, DLQ et idempotence
 
-Le parcours illustre `at-most-once` et `at-least-once`. Il n'annonce pas de garantie `exactly-once` de bout en bout. Avec `at-least-once`, l'effet métier doit être idempotent à partir d'une clé stable, même si le même `event_id` est livré plusieurs fois.
+Une erreur de décodage, de contrat ou une panne synthétique déclenche une republication bornée. Le canal active les publisher confirms pour les republications retry et DLQ. L'original est acquitté uniquement après confirmation ; un nack, un retour non routable ou une erreur AMQP provoque un nack avec requeue de l'original.
 
-## Échecs attendus
+Les propriétés d'identification, de corrélation, de contenu et les en-têtes existants sont conservés. `x-retry-count` est incrémenté jusqu'à la DLQ. L'idempotence repose sur `eventId` et ne constitue pas une garantie `exactly-once` de bout en bout.
 
-- consumer indisponible puis redémarré ;
-- exception avant l'effet métier ;
-- exception après l'effet métier mais avant l'ack ;
-- doublon volontaire ;
-- message non conforme ;
-- message poison après le nombre maximal de tentatives.
-
-Les tests doivent prouver retry borné, absence de boucle infinie, redelivery visible et arrivée déterministe en DLQ.
+Les tests couvrent publication confirmée, deux consommateurs, doublon sans double effet, redelivery après fermeture sans ack, JSON invalide, JSON valide non objet, retry borné, DLQ et confirmation négative sans ack.
 
 ## Webhook local
 
-Le dépôt inclura un émetteur et un receiver locaux. Le contrat précisera identifiant, horodatage, signature fondée sur un secret factice, timeout, retries et idempotence. Les tests couvriront signature invalide, réponse 5xx et notification rejouée.
+L'émetteur et le récepteur utilisent un secret factice configurable, une signature HMAC, un horodatage et une clé d'idempotence. Le récepteur limite le rejeu. L'émetteur applique un timeout et au plus trois tentatives par défaut.
+
+Les tests couvrent signature invalide, rejeu, corps signé non objet, première réponse HTTP 5xx suivie d'un succès et épuisement borné sur réponses 5xx. Le backoff est injectable afin que les tests n'attendent pas réellement.
 
 ## Comparaison Redis Pub/Sub
 
-Redis Pub/Sub est comparé à RabbitMQ pour la diffusion temps réel : faible persistance, absence de reprise native des messages manqués et sémantique proche de `at-most-once`. Cette comparaison est documentée ; aucun service Redis n'est requis.
+Redis Pub/Sub est comparé à RabbitMQ pour la diffusion temps réel : absence de persistance et d'acknowledgement natifs, pas de reprise automatique des messages manqués et routage plus limité. Aucun service Redis n'est déployé.

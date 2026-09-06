@@ -13,4 +13,3 @@ class Settings:
     rabbitmq_password: str = os.getenv("RABBITMQ_PASSWORD", "demo_only_change_me")
     data_dir: Path = Path(os.getenv("ASTROBRIDGE_DATA_DIR", ".astrobridge"))
     webhook_secret: str = os.getenv("WEBHOOK_SECRET", "synthetic_demo_secret_change_me")
-

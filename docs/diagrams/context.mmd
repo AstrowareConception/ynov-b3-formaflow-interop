@@ -1,0 +1,6 @@
+flowchart LR
+    Core[FormaFlow Core] -->|fait métier| AB[AstroBridge]
+    AB -->|TrainingSessionCreated| Admin[Préparation administrative]
+    AB -->|TrainingSessionCreated| Notify[Notification synthétique]
+    AB -. aucun modèle ORM .-> Boundary[Frontière d'intégration]
+

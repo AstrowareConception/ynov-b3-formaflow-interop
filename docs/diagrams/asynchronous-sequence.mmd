@@ -1,0 +1,12 @@
+sequenceDiagram
+    participant P as Producteur
+    participant R as RabbitMQ
+    participant A as Administration
+    participant N as Notification
+    P->>R: publish persistant + confirm
+    R-->>P: confirm
+    R->>A: livraison
+    A-->>R: ack manuel
+    R->>N: livraison indépendante
+    N-->>R: ack manuel
+

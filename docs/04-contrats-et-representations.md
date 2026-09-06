@@ -2,39 +2,26 @@
 
 ## Sémantique commune
 
-Les trois représentations décrivent le même événement et doivent préserver : identité de l'événement, version, date d'occurrence, corrélation, identifiant de session, formation, période, capacité et informations strictement nécessaires aux consommateurs.
-
-Le mapping doit expliciter :
-
-- types et unités ;
-- format des dates et identifiants ;
-- absent, `null`, vide et valeur par défaut ;
-- champs requis ou optionnels ;
-- propriétaire et définition métier ;
-- règle structurelle ou invariant métier ;
-- donnée volontairement non exposée.
+JSON, Protobuf et Avro préservent l'identité de l'événement, sa version, sa date d'occurrence, la corrélation et les données minimales de session. Le mapping documente les types, unités, identifiants, valeurs absentes ou nulles, règles métier et données volontairement non exposées.
 
 ## JSON Schema
 
-Le contrat utilise le dialecte 2020-12 avec `$schema`, `$id`, `type`, `properties`, `required`, `additionalProperties`, `$defs` et `$ref`. Il fournit plusieurs exemples valides et invalides ainsi que des erreurs contenant un chemin exploitable.
+Les schémas V1 et V2 utilisent JSON Schema 2020-12 avec `$schema`, `$id`, `type`, `properties`, `required` et `additionalProperties: false`. Ils sont volontairement explicites et plats : ils n'emploient actuellement ni `$defs` ni `$ref`.
 
-Un `format` JSON Schema ne remplace pas nécessairement une validation applicative. Les règles métier qui nécessitent un état externe restent hors du schéma.
+La V1 impose notamment l'enveloppe stable, les identifiants canoniques, les dates UTC, une capacité positive, un prix en unité mineure et le statut `SCHEDULED`. La V2 reprend ces champs et exige `deliveryMode` et `location`. L'invariant `endsAt > startsAt` reste complété par la validation applicative.
 
-## Protocol Buffers
+Une racine JSON non objet produit une erreur contrôlée au chemin `$`, de règle `type`. Les exemples valides et invalides sont synchronisés avec les tests de contrats.
 
-Le `.proto` doit appliquer ces règles :
+## Protobuf
 
-- les numéros de champs sont stables ;
-- un numéro supprimé n'est jamais réutilisé ;
-- les numéros et noms retirés sont déclarés `reserved` ;
-- l'ajout de champ tient compte des valeurs par défaut ;
-- les champs inconnus et les déploiements désynchronisés sont testés ;
-- le code généré est reproductible par `make contracts` et n'est pas édité manuellement.
+Les numéros de champs sont stables, les numéros supprimés sont réservés et ne sont jamais réutilisés. Les champs inconnus sont préservés par un lecteur compatible, mais une absence ou une valeur par défaut Protobuf ne remplace pas automatiquement une règle métier.
+
+Le code Python versionné est généré par `scripts/generate_contracts.py`. Le mode `--check` refuse un module généré obsolète.
 
 ## Avro
 
-Le `.avsc` documente le record, les unions et les valeurs par défaut. Les tests distinguent schéma d'écriture et schéma de lecture et vérifient résolution, alias et promotions de types autorisées. Le schéma d'écriture doit rester disponible au lecteur des données binaires.
+La compatibilité dépend du couple schéma writer/reader. Les ajouts V2 disposent de valeurs par défaut explicites lorsque la lecture V1/V2 le nécessite. Renommage, suppression et changement de type sont documentés dans `contracts/compatibility/format-evolution.md`.
 
-## Évolution
+## Équivalence
 
-Chaque modification — ajout, suppression logique, renommage, changement de type ou contrainte — est classée selon le format et le couple précis de versions. Une compatibilité technique ne garantit pas une compatibilité sémantique.
+Les tests de round-trip reconstruisent une représentation sémantique commune. L'équivalence ne signifie pas que les octets, les mécanismes de valeurs par défaut ou les règles d'évolution sont identiques entre formats.

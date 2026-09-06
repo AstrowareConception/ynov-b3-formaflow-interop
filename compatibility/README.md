@@ -1,9 +1,9 @@
 # Compatibilité
 
-Ce dossier contiendra :
+Les ressources de compatibilité livrées sont :
 
-- `serialization-matrix.md` pour JSON Schema, Protobuf et Avro ;
-- `api-versioning.md` pour clients et API v1/v2 ;
-- la politique de dépréciation et le scénario de rollback.
+- `../contracts/compatibility/matrix.yml` pour les couples writer/reader ;
+- `../contracts/compatibility/format-evolution.md` pour JSON Schema, Protobuf et Avro ;
+- `../docs/versioning.md` pour les clients, les API V1/V2, la dépréciation et le rollback.
 
 Chaque affirmation de compatibilité doit désigner producteur/writer, consommateur/reader, versions testées, résultat et preuve automatisée.

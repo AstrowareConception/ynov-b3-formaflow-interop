@@ -1,0 +1,7 @@
+flowchart LR
+    P[Publisher] -->|training.session.created.v1| E{{formaflow.events topic}}
+    E --> QA[queue administration]
+    E --> QN[queue notification]
+    QA --> CA[consumer administration]
+    QN --> CN[consumer notification]
+

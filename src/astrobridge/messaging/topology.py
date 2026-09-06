@@ -18,9 +18,7 @@ MAX_RETRIES = 3
 def declare_topology(channel: Any) -> None:
     channel.exchange_declare(exchange=EVENT_EXCHANGE, exchange_type="topic", durable=True)
     channel.exchange_declare(exchange=RETRY_EXCHANGE, exchange_type="direct", durable=True)
-    channel.exchange_declare(
-        exchange=DEAD_LETTER_EXCHANGE, exchange_type="direct", durable=True
-    )
+    channel.exchange_declare(exchange=DEAD_LETTER_EXCHANGE, exchange_type="direct", durable=True)
     for consumer, queue in CONSUMERS.items():
         retry_queue = f"{queue}.retry"
         dead_queue = f"{queue}.dlq"
@@ -37,9 +35,7 @@ def declare_topology(channel: Any) -> None:
         )
         channel.queue_bind(queue=retry_queue, exchange=RETRY_EXCHANGE, routing_key=consumer)
         channel.queue_declare(queue=dead_queue, durable=True)
-        channel.queue_bind(
-            queue=dead_queue, exchange=DEAD_LETTER_EXCHANGE, routing_key=consumer
-        )
+        channel.queue_bind(queue=dead_queue, exchange=DEAD_LETTER_EXCHANGE, routing_key=consumer)
 
 
 def connection_parameters(

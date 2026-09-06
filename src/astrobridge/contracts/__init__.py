@@ -1,2 +1,1 @@
 """Contract codecs and validation."""
-

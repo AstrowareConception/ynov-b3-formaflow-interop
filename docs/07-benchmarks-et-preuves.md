@@ -1,31 +1,19 @@
 # Benchmarks et preuves
 
-## Protocole minimal
+## Protocole
 
-Le corpus représente exactement les mêmes objets dans les trois formats. Le script mesure au minimum taille encodée, temps de sérialisation et temps de désérialisation.
+Le corpus représente les mêmes événements dans les trois formats. `benchmarks/run.py` mesure taille encodée, sérialisation et désérialisation après vérification de l'équivalence.
 
-Le protocole documente :
+Le protocole fixe la graine, sépare la génération du corpus, effectue un warmup, répète les mesures et publie médiane et p95 avec le contexte Python et matériel.
 
-- versions de Python et des bibliothèques ;
-- machine et conditions d'exécution utiles ;
-- taille et distribution du corpus ;
-- warm-up et nombre de répétitions ;
-- médiane et mesure de dispersion ;
-- exclusion éventuelle du coût de génération ou d'initialisation ;
-- vérification préalable de l'équivalence sémantique.
+## Emplacements
 
-## Règles d'interprétation
+- corpus déterministe : `benchmarks/corpus/` ;
+- résultats bruts lisibles par machine : `benchmarks/raw/` ;
+- synthèses Markdown : `benchmarks/reports/`.
 
-Une mesure locale ne démontre pas qu'un format est toujours meilleur. La recommandation distingue résultat observé, coût d'outillage, lisibilité, écosystème, durée de vie du contrat et besoin opérationnel.
+Les preuves complémentaires couvrent round-trips, compatibilité V1/V2, événement nominal, doublon, poison, DLQ et idempotence.
 
-## Preuves attendues
+## Interprétation
 
-- résultats bruts versionnés dans `benchmarks/results/` ;
-- synthèse lisible et commande exacte de reproduction ;
-- tests d'équivalence du décodage ;
-- journaux d'un événement nominal, d'un doublon et d'un poison message ;
-- état de la DLQ et preuve d'idempotence ;
-- tests de compatibilité v1-v2 ;
-- limites et incidents rencontrés.
-
-Les captures d'écran ne remplacent jamais une sortie textuelle ou un test automatisé lorsqu'une preuve reproductible est possible.
+Une mesure locale ne démontre pas qu'un format est toujours meilleur. La recommandation distingue résultat observé, coût d'outillage, lisibilité, gouvernance du schéma, écosystème et durée de vie du contrat. Les captures d'écran ne remplacent pas une sortie textuelle reproductible.

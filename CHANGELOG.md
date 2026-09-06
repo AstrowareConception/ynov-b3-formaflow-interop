@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0 - 2026-09-06
+
+- Ajout du parcours exécutable en quatre checkpoints pédagogiques.
+- Contrats JSON Schema, Protobuf et Avro V1/V2 avec génération et compatibilité.
+- API FastAPI, RabbitMQ robuste, webhook HMAC, benchmark et preuves synthétiques.
+- Diagrammes Mermaid/SVG, handoff Agilité autonome, validateur et packaging déterministe.
+- Confirmation du statut non évalué et de l'absence de contenu de questionnaire public.
+
 ## 0.1.0 — Spécification initiale
 
 - définition du périmètre pédagogique et du fil rouge AstroBridge ;

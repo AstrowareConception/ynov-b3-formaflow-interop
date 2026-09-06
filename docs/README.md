@@ -13,4 +13,4 @@
 | [09 — Validation des acquis](09-validation-des-acquis.md) | QCM formatif et absence de notation |
 | [10 — Handoff agilité](10-handoff-agility.md) | Sortie canonique destinée au module suivant |
 
-Les ADR d'étudiants seront placés dans `docs/adr/`. La fiche de transfert CDAN se trouve dans [cdan/transfer.md](cdan/transfer.md).
+L'ADR canonique de propriété du contrat se trouve dans [decisions/001-contract-ownership.md](decisions/001-contract-ownership.md). La fiche de transfert CDAN se trouve dans [cdan/transfer.md](cdan/transfer.md).
