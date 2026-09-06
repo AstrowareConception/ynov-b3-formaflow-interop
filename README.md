@@ -58,6 +58,7 @@ ynov-b3-formaflow-interop/
 ├── README.md
 ├── CHANGELOG.md
 ├── manifest.yml
+├── CHECKPOINTS.md
 ├── Makefile
 ├── pyproject.toml
 ├── compose.yml
@@ -127,6 +128,6 @@ Après consolidation, le formateur publie `handoff/agility-reference/` au tag `r
 
 Toutes les données sont synthétiques. Les webhooks restent locaux, leurs secrets sont factices et aucun service cloud, compte externe, email ou paiement réel n'est appelé. Les journaux d'exemple ne doivent contenir ni secret ni donnée personnelle réaliste.
 
-## État de cette V1
+## État de la version 0.1.0
 
 Cette version fixe le contrat du repository. Restent à produire : contrats volontairement incomplets, fixtures, API FastAPI, producteur et consommateurs RabbitMQ, webhook local, scénarios de panne, benchmark, tests, Makefile, checkpoints Git réels, kit QCM privé et paquet canonique pour l'agilité.
