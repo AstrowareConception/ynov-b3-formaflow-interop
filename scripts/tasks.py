@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -28,6 +29,24 @@ def compose(*args: str) -> int:
     return run("docker", "compose", "-p", PROJECT, *args)
 
 
+def reset_data() -> int:
+    compose("down", "--volumes", "--remove-orphans")
+    target = (ROOT / ".astrobridge").resolve()
+    if target.parent != ROOT.resolve():
+        raise RuntimeError(f"refusing to remove unexpected path: {target}")
+    if target.exists():
+        shutil.rmtree(target)
+    return 0
+
+
+def smoke() -> int:
+    compose("up", "-d", "--build", "--wait")
+    try:
+        return compose("exec", "-T", "api", "python", "scripts/smoke.py")
+    finally:
+        compose("down", "--volumes", "--remove-orphans")
+
+
 def contracts() -> int:
     run(sys.executable, "scripts/generate_contracts.py", "--check")
     return run(sys.executable, "-m", "pytest", "tests/contracts")
@@ -44,7 +63,7 @@ def main() -> int:
         "setup": setup,
         "start": lambda: compose("up", "-d", "--build"),
         "stop": lambda: compose("down", "--volumes", "--remove-orphans"),
-        "reset-data": lambda: compose("down", "--volumes", "--remove-orphans"),
+        "reset-data": reset_data,
         "test": lambda: run(sys.executable, "-m", "pytest"),
         "test-unit": lambda: run(sys.executable, "-m", "pytest", "tests/unit"),
         "test-contracts": lambda: run(sys.executable, "-m", "pytest", "tests/contracts"),
@@ -55,12 +74,12 @@ def main() -> int:
         "contracts": contracts,
         "generate": lambda: run(sys.executable, "scripts/generate_contracts.py"),
         "benchmark": benchmark,
+        "smoke": smoke,
         "validate-repo": lambda: run(sys.executable, "scripts/validate_repo.py"),
     }
     if task in commands:
         return commands[task]()
     future = {
-        "smoke",
         "quality",
         "validate-diagrams",
         "validate-handoff",

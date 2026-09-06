@@ -1,0 +1,4 @@
+{
+  "fixture": "publish fixtures/valid/training-session-created.v1.json twice with the same eventId"
+}
+

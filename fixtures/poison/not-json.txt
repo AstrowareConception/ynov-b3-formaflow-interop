@@ -1,0 +1,2 @@
+this is a synthetic poison message, not JSON
+

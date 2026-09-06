@@ -1,0 +1,13 @@
+.git
+_inputs
+.idea
+.venv
+venv
+__pycache__
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.astrobridge
+dist
+build
+*.log
