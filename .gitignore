@@ -15,6 +15,5 @@ dist/
 build/
 .env
 *.log
-benchmarks/raw/*.json
 benchmarks/reports/generated-*.md
 .astrobridge/

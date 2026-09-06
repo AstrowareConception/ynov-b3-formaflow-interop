@@ -1,0 +1,41 @@
+{
+  "type": "record",
+  "name": "TrainingSessionCreatedV1",
+  "namespace": "test.example.astrobridge.v1",
+  "fields": [
+    {"name": "eventId", "type": "string"},
+    {"name": "eventType", "type": "string"},
+    {"name": "version", "type": "int"},
+    {"name": "occurredAt", "type": "string"},
+    {"name": "correlationId", "type": "string"},
+    {"name": "causationId", "type": ["null", "string"], "default": null},
+    {"name": "producer", "type": "string"},
+    {
+      "name": "payload",
+      "type": {
+        "type": "record",
+        "name": "TrainingSessionPayloadV1",
+        "fields": [
+          {"name": "trainingSessionId", "type": "string"},
+          {"name": "trainingId", "type": "string"},
+          {"name": "startsAt", "type": "string"},
+          {"name": "endsAt", "type": "string"},
+          {"name": "capacity", "type": "int"},
+          {
+            "name": "referencePrice",
+            "type": {
+              "type": "record",
+              "name": "MoneyV1",
+              "fields": [
+                {"name": "amountMinor", "type": "long"},
+                {"name": "currency", "type": "string"}
+              ]
+            }
+          },
+          {"name": "status", "type": "string"}
+        ]
+      }
+    }
+  ]
+}
+

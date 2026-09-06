@@ -28,6 +28,16 @@ def compose(*args: str) -> int:
     return run("docker", "compose", "-p", PROJECT, *args)
 
 
+def contracts() -> int:
+    run(sys.executable, "scripts/generate_contracts.py", "--check")
+    return run(sys.executable, "-m", "pytest", "tests/contracts")
+
+
+def benchmark() -> int:
+    run(sys.executable, "benchmarks/generate_corpus.py")
+    return run(sys.executable, "benchmarks/run.py")
+
+
 def main() -> int:
     task = sys.argv[1] if len(sys.argv) > 1 else "help"
     commands = {
@@ -42,16 +52,14 @@ def main() -> int:
         "test-integration": lambda: run(sys.executable, "-m", "pytest", "-m", "integration"),
         "lint": lambda: run(sys.executable, "-m", "ruff", "check", "."),
         "typecheck": lambda: run(sys.executable, "-m", "mypy"),
-        "contracts": lambda: run(
-            sys.executable, "scripts/validate_repo.py", "--stage", "course-start"
-        ),
+        "contracts": contracts,
+        "generate": lambda: run(sys.executable, "scripts/generate_contracts.py"),
+        "benchmark": benchmark,
         "validate-repo": lambda: run(sys.executable, "scripts/validate_repo.py"),
     }
     if task in commands:
         return commands[task]()
     future = {
-        "generate",
-        "benchmark",
         "smoke",
         "quality",
         "validate-diagrams",
