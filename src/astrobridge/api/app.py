@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import json
+from typing import Any
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 
 from astrobridge.config import Settings
+from astrobridge.contracts.adapters import downcast_v2_to_v1
 from astrobridge.contracts.validation import assert_valid_event
+from astrobridge.messaging.publisher import publish_event
 from astrobridge.observability.store import EvidenceStore
 from astrobridge.webhooks.security import ReplayGuard
 
@@ -29,7 +32,54 @@ def health() -> dict[str, str]:
 
 @app.get("/ready")
 def ready() -> JSONResponse:
-    return JSONResponse({"status": "ready", "stage": "checkpoint-async"})
+    return JSONResponse({"status": "ready", "stage": "checkpoint-versioning"})
+
+
+@app.exception_handler(ValueError)
+async def contract_error_handler(request: Request, error: ValueError) -> JSONResponse:
+    correlation_id = request.headers.get("X-Correlation-ID", "synthetic-local-request")
+    return JSONResponse(
+        status_code=422,
+        content={
+            "error": "contract_validation_failed",
+            "message": str(error),
+            "correlationId": correlation_id,
+        },
+    )
+
+
+@app.post("/api/v1/events")
+def accept_v1_event(
+    event: dict[str, Any], response: Response, publish: bool = Query(default=False)
+) -> dict[str, Any]:
+    assert_valid_event(event, version=1)
+    if publish:
+        publish_event(event)
+    response.headers["Deprecation"] = "true"
+    response.headers["Sunset"] = "Thu, 30 Sep 2027 23:59:59 GMT"
+    response.headers["Link"] = '</docs/versioning.md>; rel="deprecation"'
+    return {"accepted": True, "version": 1, "event": event}
+
+
+@app.post("/api/v2/events")
+def accept_v2_event(
+    event: dict[str, Any], publish: bool = Query(default=False)
+) -> dict[str, Any]:
+    assert_valid_event(event, version=2)
+    legacy = downcast_v2_to_v1(event)
+    assert_valid_event(legacy, version=1)
+    if publish:
+        publish_event(legacy)
+    return {"accepted": True, "version": 2, "legacyV1": legacy}
+
+
+@app.get("/evidence/{consumer}")
+def read_evidence(consumer: str) -> dict[str, object]:
+    if consumer not in {"administration", "notification", "webhook"}:
+        raise HTTPException(status_code=404, detail="unknown synthetic consumer")
+    path = Settings().data_dir / f"evidence-{consumer}.jsonl"
+    lines = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
+    return {"consumer": consumer, "synthetic": True, "traces": [json.loads(line) for line in lines]}
 
 
 @app.exception_handler(ValueError)

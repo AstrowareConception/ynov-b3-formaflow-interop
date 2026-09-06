@@ -1,8 +1,8 @@
 {
   "type": "record",
-  "name": "TrainingSessionCreatedV1",
-  "namespace": "test.example.astrobridge.v1",
-  "aliases": ["test.example.astrobridge.v2.TrainingSessionCreatedV2"],
+  "name": "TrainingSessionCreatedV2",
+  "namespace": "test.example.astrobridge.v2",
+  "aliases": ["test.example.astrobridge.v1.TrainingSessionCreatedV1"],
   "fields": [
     {"name": "eventId", "type": "string"},
     {"name": "eventType", "type": "string"},
@@ -15,8 +15,8 @@
       "name": "payload",
       "type": {
         "type": "record",
-        "name": "TrainingSessionPayloadV1",
-        "aliases": ["test.example.astrobridge.v2.TrainingSessionPayloadV2"],
+        "name": "TrainingSessionPayloadV2",
+        "aliases": ["test.example.astrobridge.v1.TrainingSessionPayloadV1"],
         "fields": [
           {"name": "trainingSessionId", "type": "string"},
           {"name": "trainingId", "type": "string"},
@@ -27,17 +27,20 @@
             "name": "referencePrice",
             "type": {
               "type": "record",
-              "name": "MoneyV1",
-              "aliases": ["test.example.astrobridge.v2.MoneyV2"],
+              "name": "MoneyV2",
+              "aliases": ["test.example.astrobridge.v1.MoneyV1"],
               "fields": [
                 {"name": "amountMinor", "type": "long"},
                 {"name": "currency", "type": "string"}
               ]
             }
           },
-          {"name": "status", "type": "string"}
+          {"name": "status", "type": "string"},
+          {"name": "deliveryMode", "type": "string", "default": "ONSITE"},
+          {"name": "location", "type": {"type": "record", "name": "LocationV2", "fields": [{"name": "label", "type": "string"}]}, "default": {"label": "TO_BE_CONFIRMED"}}
         ]
       }
     }
   ]
 }
+

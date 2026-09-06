@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package astrobridge.v2;
+
+message MoneyV2 {
+  int64 amount_minor = 1;
+  string currency = 2;
+}
+
+message TrainingSessionPayloadV2 {
+  string training_session_id = 1;
+  string training_id = 2;
+  string starts_at = 3;
+  string ends_at = 4;
+  int32 capacity = 5;
+  MoneyV2 reference_price = 6;
+  string status = 7;
+  string delivery_mode = 8;
+  string location_label = 9;
+  reserved 10;
+  reserved "legacy_room";
+}
+
+message TrainingSessionCreatedV2 {
+  string event_id = 1;
+  string event_type = 2;
+  int32 version = 3;
+  string occurred_at = 4;
+  string correlation_id = 5;
+  optional string causation_id = 6;
+  string producer = 7;
+  TrainingSessionPayloadV2 payload = 8;
+}
+

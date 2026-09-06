@@ -1,0 +1,21 @@
+{
+  "eventId": "10000000-0000-4000-8000-000000000101",
+  "eventType": "TrainingSessionCreated",
+  "version": 2,
+  "occurredAt": "2027-01-10T09:00:00Z",
+  "correlationId": "20000000-0000-4000-8000-000000000101",
+  "causationId": null,
+  "producer": "training-management",
+  "payload": {
+    "trainingSessionId": "SES-2027-0101",
+    "trainingId": "TRN-0101",
+    "startsAt": "2027-04-15T08:45:00Z",
+    "endsAt": "2027-04-15T16:45:00Z",
+    "capacity": 16,
+    "referencePrice": {"amountMinor": 72000, "currency": "EUR"},
+    "status": "SCHEDULED",
+    "deliveryMode": "HYBRID",
+    "location": {"label": "Synthetic Campus A / Local Room"}
+  }
+}
+

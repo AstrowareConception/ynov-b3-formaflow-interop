@@ -1,0 +1,17 @@
+GET http://localhost:8000/health
+X-Correlation-ID: synthetic-request-001
+
+### V1 dépréciée
+POST http://localhost:8000/api/v1/events
+Content-Type: application/json
+X-Correlation-ID: synthetic-request-002
+
+< ../contracts/examples/training-session-created.v1.valid.json
+
+### V2 canonique
+POST http://localhost:8000/api/v2/events
+Content-Type: application/json
+X-Correlation-ID: synthetic-request-003
+
+< ../contracts/examples/training-session-created.v2.valid.json
+

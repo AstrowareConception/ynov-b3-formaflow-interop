@@ -1,0 +1,11 @@
+version: 1
+cases:
+  - { writer: json-v1, reader: json-v1, compatible: true, mechanism: direct }
+  - { writer: json-v2, reader: json-v1, compatible: true, mechanism: explicit-downcast }
+  - { writer: protobuf-v2, reader: protobuf-v1, compatible: true, mechanism: unknown-fields }
+  - { writer: avro-v1, reader: avro-v2, compatible: true, mechanism: reader-defaults }
+  - { writer: avro-v2, reader: avro-v1, compatible: true, mechanism: aliases-and-field-discard }
+  - { writer: json-capacity-string, reader: json-v2, compatible: false, mechanism: type-break }
+  - { writer: renamed-required-field, reader: any-v1, compatible: false, mechanism: missing-required }
+  - { writer: reused-protobuf-number, reader: protobuf-v1, compatible: false, mechanism: forbidden-number-reuse }
+

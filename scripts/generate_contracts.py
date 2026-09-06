@@ -14,14 +14,14 @@ OUTPUT = ROOT / "src/generated"
 
 def generate(destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=True)
-    proto = PROTO_DIR / "training_session_created_v1.proto"
+    protos = sorted(PROTO_DIR.glob("training_session_created_v*.proto"))
     command = [
         sys.executable,
         "-m",
         "grpc_tools.protoc",
         f"--proto_path={PROTO_DIR}",
         f"--python_out={destination}",
-        str(proto),
+        *(str(proto) for proto in protos),
     ]
     subprocess.run(command, check=True, cwd=ROOT)  # noqa: S603
 
@@ -30,9 +30,13 @@ def check_current() -> bool:
     with tempfile.TemporaryDirectory(prefix="astrobridge-proto-") as temp:
         candidate = Path(temp)
         generate(candidate)
-        expected = OUTPUT / "training_session_created_v1_pb2.py"
-        actual = candidate / expected.name
-        return expected.exists() and filecmp.cmp(expected, actual, shallow=False)
+        names = [proto.stem + "_pb2.py" for proto in PROTO_DIR.glob("*.proto")]
+        return bool(names) and all(
+            (OUTPUT / name).exists()
+            and filecmp.cmp(OUTPUT / name, candidate / name, shallow=False)
+            for name in names
+        )
+
 
 
 def main() -> int:
@@ -52,4 +56,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
