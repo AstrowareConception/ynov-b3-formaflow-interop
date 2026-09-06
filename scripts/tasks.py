@@ -89,7 +89,7 @@ def reset_data() -> int:
 def smoke() -> int:
     compose("up", "-d", "--build", "--wait")
     try:
-        return compose("exec", "-T", "api", "python", "scripts/smoke.py")
+        return compose("exec", "-T", "api", "python", "-m", "pytest", "tests/smoke")
     finally:
         stop()
 
