@@ -1,0 +1,27 @@
+sequenceDiagram
+  actor Client
+  participant HTTP as Adapter HTTP
+  participant UC as CancelEnrollment
+  participant TX as CancellationTransaction
+  participant DB as PostgreSQL
+  participant Policy as RefundPolicy
+  participant E as Enrollment
+  participant P as DomainEventPublisher
+  Client->>HTTP: POST /enrollments/:id/cancel
+  HTTP->>UC: execute(id)
+  UC->>TX: run(work)
+  TX->>DB: BEGIN + SELECT FOR UPDATE
+  alt déjà CANCELLED
+    DB-->>UC: décision persistée
+    UC-->>HTTP: résultat idempotent
+  else PENDING ou CONFIRMED
+    UC->>Policy: decide(price snapshot, start, now UTC)
+    Policy-->>UC: 100 / 50 / 0 %
+    UC->>E: cancel(now, refund)
+    E-->>UC: EnrollmentCancelled
+    UC->>DB: UPDATE
+    TX->>DB: COMMIT
+    UC->>P: publish après succès
+    UC-->>HTTP: résultat
+  end
+  HTTP-->>Client: réponse métier traduite

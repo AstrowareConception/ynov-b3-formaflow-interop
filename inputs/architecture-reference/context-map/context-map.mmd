@@ -1,0 +1,11 @@
+flowchart LR
+  CAT[Catalogue et planification] -->|Session publiée: OHS| ENR[Gestion des inscriptions]
+  ORD[Commande et facturation] -->|Commande confirmée: ACL| ENR
+  ENR -->|Faits minimaux: Customer/Supplier| NOTIF[Notification]
+  ENR -->|Événements versionnés| PROJ[Projections et analytique]
+  classDef core fill:#f4c95d,stroke:#5b4500,color:#211900
+  classDef support fill:#b9d8c2,stroke:#275c36,color:#102617
+  classDef generic fill:#d6e6f2,stroke:#315f7a,color:#102a39
+  class ENR core
+  class CAT,ORD support
+  class NOTIF,PROJ generic

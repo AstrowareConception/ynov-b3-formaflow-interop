@@ -1,0 +1,9 @@
+version: 1
+images:
+  python:
+    tag: python:3.12.10-slim-bookworm
+    digest: sha256:fd95fa221297a88e1cf49c55ec1828edd7c5a428187e67b5d1805692d11588db
+  rabbitmq:
+    tag: rabbitmq:4.1.2-management
+    digest: sha256:b19379c75c518853b02ab09dfdb84d42b1d40d319bfd315b29ed9e7a32c7968d
+update: "Run python scripts/tasks.py update-image-lock, review the resolved manifests, then run compose config and smoke."

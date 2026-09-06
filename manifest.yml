@@ -1,7 +1,8 @@
 repository:
   name: ynov-b3-formaflow-interop
-  version: 0.1.0
-  status: specification
+  version: 1.0.0
+  status: teaching
+  stage: course-start
   academic_year: 2026-2027
   module: Echange de donnees et interoperabilite
   duration_hours: 14
@@ -29,6 +30,16 @@ runtime:
   external_services_required: false
   data_policy: synthetic_only
 
+teaching:
+  total_minutes: 840
+  ffp_minutes: 360
+  tdp_minutes: 480
+  sessions:
+    - { id: 1, duration_minutes: 240, ffp_minutes: 120, tdp_minutes: 120 }
+    - { id: 2, duration_minutes: 180, ffp_minutes: 90, tdp_minutes: 90 }
+    - { id: 3, duration_minutes: 240, ffp_minutes: 90, tdp_minutes: 150 }
+    - { id: 4, duration_minutes: 180, ffp_minutes: 60, tdp_minutes: 120 }
+
 commands:
   - setup
   - start
@@ -50,13 +61,12 @@ tags:
   canonical:
     - reference-final
 
-assessment:
-  assessed: false
-  graded_artifacts: 0
-  individual_qcm:
-    duration_minutes: 30
-    graded: false
-    purpose: formative_validation
+assessment: false
+formative_individual_check:
+  format: qcm
+  duration_minutes: 30
+  graded: false
+  public_content: false
 
 handoff:
   target_repository: ynov-b3-formaflow-agility

@@ -1,0 +1,12 @@
+flowchart LR
+  CLIENT[Client HTTP] --> HTTP[Adapter HTTP NestJS]
+  HTTP --> USECASE[Composant application\nEnrollLearner]
+  USECASE --> DOMAIN[Composant domaine\nSession + Enrollment]
+  USECASE --> PORTS[Ports sortants application]
+  PORTS --> PG[Adapter PostgreSQL]
+  PORTS --> TIME[Adapter horloge]
+  PORTS --> IDS[Adapter identité]
+  PORTS --> NOTIFY[Adapter notification simulée]
+  PG --> DB[(PostgreSQL 16)]
+  BOOT[Bootstrap NestJS] -. compose .-> HTTP
+  BOOT -. compose .-> PG

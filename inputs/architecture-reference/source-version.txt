@@ -1,0 +1,5 @@
+source_repository=ynov-b3-formaflow-hexagonal
+source_version=1.0.0
+source_tag=reference-final
+reference_repository=ynov-b3-formaflow-reference 1.0.0
+data_repository=ynov-b3-formaflow-data 1.0.0

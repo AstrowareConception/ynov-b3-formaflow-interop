@@ -1,0 +1,37 @@
+name: formaflow-interop
+services:
+  rabbitmq:
+    image: rabbitmq:4.1.2-management@sha256:b19379c75c518853b02ab09dfdb84d42b1d40d319bfd315b29ed9e7a32c7968d
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-astrobridge_demo}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-demo_only_change_me}
+    ports:
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+  api:
+    build:
+      context: .
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER:-astrobridge_demo}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-demo_only_change_me}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-synthetic_demo_secret_change_me}
+      ASTROBRIDGE_DATA_DIR: /data
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - astrobridge-data:/data
+volumes:
+  rabbitmq-data:
+  astrobridge-data:

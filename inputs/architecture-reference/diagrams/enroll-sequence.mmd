@@ -1,0 +1,21 @@
+sequenceDiagram
+  actor Client
+  participant HTTP as Adapter HTTP
+  participant UC as EnrollLearner
+  participant TX as EnrollmentTransaction
+  participant D as TrainingSession
+  participant DB as PostgreSQL
+  participant N as EnrollmentNotifier
+  Client->>HTTP: POST /enrollments DTO
+  HTTP->>UC: execute(command)
+  UC->>TX: run(work)
+  TX->>DB: BEGIN + SELECT session FOR UPDATE
+  DB-->>UC: session + actifs
+  UC->>D: assertEnrollmentAllowed
+  D-->>UC: décision acceptée
+  UC->>DB: INSERT Enrollment
+  TX->>DB: COMMIT
+  UC->>N: enrollmentConfirmed
+  N-->>UC: SENT ou FAILED
+  UC-->>HTTP: résultat indépendant de l'échec notification
+  HTTP-->>Client: 201

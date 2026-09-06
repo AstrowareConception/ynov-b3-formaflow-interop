@@ -1,7 +1,7 @@
-# Entrée — Référence d'architecture
+# Paquet de transmission vers Interopérabilité
 
-Ce dossier recevra la copie en lecture seule du paquet `handoff/interop-reference/` produit par `ynov-b3-formaflow-hexagonal` au tag `reference-final`.
+Ce snapshot autonome est produit depuis `ynov-b3-formaflow-hexagonal` 1.0.0 au tag `reference-final`. Il prépare le module Interopérabilité sans exiger le clonage de l'application.
 
-Contenu attendu : langage ubiquitaire, context map, frontières, invariants, événements de domaine, candidats à l'intégration, diagrammes, ADR et limites.
+Il contient langage ubiquitaire, context map, frontières, événements de domaine, contrat canonique existant, candidats non contractuels, diagrammes, décisions, preuves et limites. Il ne contient ni branche étudiante, rendu évalué, contenu de QCM, secret ou donnée personnelle réelle.
 
-Les fichiers seront fournis dans `course-start`. Ils servent de contexte et ne doivent pas être modifiés par les binômes. Le repository restera utilisable sans cloner le dépôt d'origine.
+Validation autonome: `python validate.py` depuis ce dossier.
